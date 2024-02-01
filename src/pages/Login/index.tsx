@@ -1,6 +1,44 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import BackgroundLogin from 'src/pages/Login/BackgroundLogin';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+    password: '',
+    remember: false,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setUserInfo({
+      ...userInfo,
+      [name]: type === 'checkbox' ? checked : value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if userinfo is empty
+    if (userInfo.email === '' || userInfo.password === '') {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    // check userinfo
+    if (userInfo.email !== 'tienhg201@gmail.com' || userInfo.password !== '1') {
+      toast.error('Email or password incorrect');
+
+      return;
+    }
+    // if remember is checked
+    if (userInfo.remember) {
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    }
+    navigate('/');
+  };
+
   return (
     <>
       <BackgroundLogin />
@@ -11,12 +49,18 @@ const Login = () => {
               <h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white'>
                 Sign in to your account
               </h1>
-              <form className='space-y-4 md:space-y-6' action='/'>
+              <form
+                className='space-y-4 md:space-y-6'
+                action='/'
+                onSubmit={handleSubmit}
+                noValidate
+              >
                 <div>
                   <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
                     Your email
                   </label>
                   <input
+                    onChange={handleInputChange}
                     type='email'
                     name='email'
                     id='email'
@@ -29,6 +73,7 @@ const Login = () => {
                     Password
                   </label>
                   <input
+                    onChange={handleInputChange}
                     type='password'
                     name='password'
                     id='password'
@@ -40,7 +85,9 @@ const Login = () => {
                   <div className='flex items-start'>
                     <div className='flex items-center h-5'>
                       <input
+                        onChange={handleInputChange}
                         id='remember'
+                        name='remember'
                         aria-describedby='remember'
                         type='checkbox'
                         className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'

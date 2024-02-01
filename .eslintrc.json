@@ -31,7 +31,8 @@
     "no-unused-expressions": "error",
     "no-extra-boolean-cast": "off",
     "react/no-unescaped-entities": ["off"],
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "no-console": "warn"
   },
   "settings": {
     "import/resolver": {
